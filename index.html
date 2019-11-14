@@ -1,0 +1,136 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>Finnkino Leffainfo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+<h1>Finnkino Leffainfo</h1>
+<form>
+    <div>
+      <label>Valitse elokuvateatteri</label>
+      <select id="teatteri">
+        <option value="1029">Valitse alue/teatteri</option>
+        <option value="1014">Pääkaupunkiseutu</option>
+        <option value="1012">Espoo</option>
+        <option value="1039">Espoo: OMENA</option>
+        <option value="1038">Espoo: SELLO</option>
+        <option value="1002">Helsinki</option>
+        <option value="1045">Helsinki: ITIS</option>
+        <option value="1031">Helsinki: KINOPALATSI</option>
+        <option value="1032">Helsinki: MAXIM</option>
+        <option value="1033">Helsinki: TENNISPALATSI</option>
+        <option value="1013">Vantaa: FLAMINGO</option>
+        <option value="1015">Jyväskylä: Fantasia</option>
+        <option value="1016">Kuopio: SCALA</option>
+        <option value="1017">Lahti: KUVAPALATSI</option>
+        <option value="1041">Lappeenranta: STRAND</option>
+        <option value="1018">Oulu: PLAZA</option>
+        <option value="1019">Pori: PROMENADI</option>
+        <option value="1021">Tampere</option>
+        <option value="1034">Tampere: CINE ATLAS</option>
+        <option value="1035">Tampere: PLEVNA</option>
+        <option value="1022">Turku: KINOPALATSI</option>
+      </select>
+	</div>
+      <div>
+        <label>Valitse päivämäärä</label>
+      <input type="date" id="pvm">
+      </div>
+      <div>
+        <button type="button" onclick="getMovies()">Hae elokuvat</button>
+      </div>
+	</form>
+		<br>
+		
+
+<script>
+function getMovies() {
+
+  var raw = document.getElementById("pvm").value;
+  var time = raw.slice(8, 10) + "." + raw.slice(5, 7) + "." + raw.slice(0, 4);
+  var theater = document.getElementById("teatteri").value;
+  var url = "https://www.finnkino.fi/xml/Schedule/?area=" + theater + "&dt=" + time;
+
+
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send()
+
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	// Save the data in variables
+    var xmlDoc = xmlhttp.responseXML;
+    txt = "";
+    pic = xmlDoc.getElementsByTagName("EventLargeImageLandscape");
+    title = xmlDoc.getElementsByTagName("Title");
+	genres = xmlDoc.getElementsByTagName("Genres")
+    theatre = xmlDoc.getElementsByTagName("TheatreAndAuditorium");
+    showstart = xmlDoc.getElementsByTagName("dttmShowStart");
+	showlength = xmlDoc.getElementsByTagName("LengthInMinutes");
+    showend = xmlDoc.getElementsByTagName("dttmShowEnd");
+    rating = xmlDoc.getElementsByTagName("RatingImageUrl");
+    ticketLink = xmlDoc.getElementsByTagName("ShowURL");
+    infoLink = xmlDoc.getElementsByTagName("EventURL");
+
+      var out = '<div>';
+    for (i = 0; i < title.length; i++) {
+      var start = showstart[i].innerHTML.slice(11, 16);
+      var end = showend[i].innerHTML.slice(11, 16);
+	  // Loop creates new <div> -tags for the data
+      out += '<div id="leffat" style="width:350px;">';
+	  out += '<br>';
+	  // Movie image
+      out += '<img id="movieimg" src="' + pic[i].childNodes[0].nodeValue + '" alt="Movie image" style=width:100%">';
+      out += '<div>';
+	  // Movie title
+      out += '<h2>' + title[i].childNodes[0].nodeValue + '</h2>';
+	  // Movie genres
+	  out += '<h5>' + genres[i].innerHTML + '</h5>';
+	  // Movie theatre
+      out += '<h4>' + theatre[i].childNodes[0].nodeValue + '</h4>';
+	  // Start time, length and rating image
+      out += '<p><b>Alkaa:</b> ' + start + '  <b>Kesto:</b> ' + showlength[i].innerHTML + ' minuuttia' + '<img src="' + rating[i].childNodes[0].nodeValue + '" align="right"></p>'; 
+	  // Estimated endtime
+	  out += '<p><b>Arvioitu päättymisaika:</b> ' + end + '</p><br>';
+	  // Link for buying tickets
+      out += '<a href="' + ticketLink[i].innerHTML + '"target="_blank" class="button"">Osta liput</a>';
+	  // Link for more info about the movie
+      out += '<a href="' + infoLink[i].innerHTML + '"target="_blank" class="button"">Elokuvan tiedot</a>';
+	  out += '<br><br>';
+      out += '</div>';
+      out += '</div>';
+    }
+      out += '</div>';
+		
+	// Place the info on screen
+    document.getElementById("elokuvat").innerHTML = out;
+  }
+}
+}
+	// Get current date
+	var date = new Date();
+	var day = date.getDate();
+	var month = date.getMonth() + 1;
+	var year = date.getFullYear();
+	if (month < 10) month = "0" + month;
+	if (day < 10) day = "0" + day;
+	var today = year + "-" + month + "-" + day;
+	document.getElementById('pvm').value = today;
+	
+</script>
+<div id="elokuvat"></div>
+</body>
+</html>

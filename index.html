@@ -10,6 +10,27 @@
         .movie { border: 1px solid #ccc; padding: 15px; margin: 10px; border-radius: 8px; }
         img { max-width: 100%; border-radius: 5px; }
         .button { display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+	.movies-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+.movie {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    text-align: center;
+}
+.movie img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
     </style>
 </head>
 <body>
@@ -44,7 +65,7 @@
         <input type="date" id="pvm">
         <br><br>
         <button onclick="getMovies()">Hae elokuvat</button>
-        <div id="elokuvat"></div>
+        <div id="elokuvat" class="movies-container"></div>
     </div>
     
     <script>
@@ -79,7 +100,7 @@
                             </div>
                         `;
                     }
-                    document.getElementById("elokuvat").innerHTML = output || "<p>Ei näytöksiä valitulle päivälle.</p>";
+                    document.getElementById("elokuvat").innerHTML = `<div class="movies-container">${output}</div>`;
                 })
                 .catch(error => console.error("Virhe tietojen haussa:", error));
         }

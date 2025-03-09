@@ -62,7 +62,8 @@
                     
                     for (let i = 0; i < movies.length; i++) {
                         let title = movies[i].getElementsByTagName("Title")[0]?.textContent || "Nimetön";
-                        let image = movies[i].getElementsByTagName("EventLargeImageLandscape")[0]?.textContent || "default.jpg";
+                        let imageTag = movies[i].getElementsByTagName("EventLargeImageLandscape")[0];
+			let image = imageTag && imageTag.textContent.trim() ? imageTag.textContent.trim() : "https://via.placeholder.com/300x200?text=Ei+kuvaa";
                         let theatre = movies[i].getElementsByTagName("TheatreAndAuditorium")[0]?.textContent || "Ei tietoa";
                         let start = movies[i].getElementsByTagName("dttmShowStart")[0]?.textContent.slice(11, 16) || "-";
                         let duration = movies[i].getElementsByTagName("LengthInMinutes")[0]?.textContent || "?";

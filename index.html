@@ -11,6 +11,7 @@
             margin: 0; 
             padding: 0;
             background-color: #070707;
+            overflow-x: hidden; /* Estää horisontaalisen vierityksen */
         }
         h1, label {
             color: #fdca00;
@@ -28,7 +29,6 @@
             max-width: 1400px;
             margin: auto;
             padding: 20px;
-            grid-auto-rows: auto; /* Rivien korkeus mukautuu sisältöön */
         }
         .movie {
             border: 2px solid #fdca00;
@@ -60,15 +60,16 @@
             width: 80%;
         }
         .movie .button {
-            margin-top: auto; /* Työntää painikkeen kortin alaosaan */
+            margin-top: auto;
         }
+
         @media (max-width: 768px) {
             .movies-container {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 2-3 korttia rinnakkain */
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 10px;
             }
             .movie {
-                max-width: 100%;
+                max-width: 180px;
             }
         }
     </style>
@@ -107,20 +108,20 @@
         <button onclick="getMovies()">Hae elokuvat</button>
         <div id="elokuvat" class="movies-container"></div>
     </div>
-    
+
     <script>
         function getMovies() {
             let date = document.getElementById("pvm").value.split("-").reverse().join(".");
             let theater = document.getElementById("teatteri").value;
             let url = `https://www.finnkino.fi/xml/Schedule/?area=${theater}&dt=${date}`;
-            
+
             fetch(url)
                 .then(response => response.text())
                 .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
                 .then(data => {
                     let movies = data.getElementsByTagName("Show");
                     let output = "";
-                    
+
                     for (let i = 0; i < movies.length; i++) {
                         let title = movies[i].getElementsByTagName("Title")[0]?.textContent || "Nimetön";
                         let imageTag = movies[i].getElementsByTagName("EventLargeImagePortrait")[0];
@@ -129,7 +130,7 @@
                         let start = movies[i].getElementsByTagName("dttmShowStart")[0]?.textContent.slice(11, 16) || "-";
                         let duration = movies[i].getElementsByTagName("LengthInMinutes")[0]?.textContent || "?";
                         let ticketURL = movies[i].getElementsByTagName("ShowURL")[0]?.textContent || "#";
-                        
+
                         output += `
                             <div class="movie">
                                 <img src="${image}" alt="Elokuvakuva">
@@ -144,7 +145,7 @@
                 })
                 .catch(error => console.error("Virhe tietojen haussa:", error));
         }
-        
+
         document.addEventListener("DOMContentLoaded", () => {
             let today = new Date().toISOString().split("T")[0];
             document.getElementById("pvm").value = today;

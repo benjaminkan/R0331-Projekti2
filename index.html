@@ -6,69 +6,72 @@
     <title>Finnkino Leffainfo</title>
     <style>
         body { 
-    font-family: Arial, sans-serif; 
-    text-align: center; 
-    margin: 0; 
-    padding: 0;
-    background-color: #070707;
-}
-h1 {
-  color: #fdca00;
-}
-label {
-  color: #fdca00;
-}
-.container { 
-    max-width: 100%;  /* Muutetaan max-width 600px → 100% */
-    margin: auto;
-    padding: 20px;
-}
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin: 0; 
+            padding: 0;
+            background-color: #070707;
+            overflow-x: hidden; /* Estää horisontaalisen vierityksen */
+        }
+        h1, label {
+            color: #fdca00;
+        }
+        .container { 
+            max-width: 100%;
+            margin: auto;
+            padding: 20px;
+        }
+        .movies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1400px;
+            margin: auto;
+            padding: 20px;
+        }
+        .movie {
+            border: 2px solid #fdca00;
+            padding: 5px;
+            border-radius: 10px;
+            background: #fdca00;
+            text-align: center;
+            box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 250px;
+            margin: auto;
+        }
+        .movie img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            background: #070707;
+            color: #fdca00;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 80%;
+        }
+        .movie .button {
+            margin-top: auto;
+        }
 
-.movies-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Leveämmät kortit */
-    gap: 75px; /* Pienempi väli */
-    width: 95%; /* Käyttää lähes koko leveyden */
-    max-width: 1600px; /* Ei veny liian leveäksi */
-    margin: auto;
-    padding: 20px;
-}
-
-.movie {
-    border: 2px solid #fdca00;
-    padding: 5px;
-    border-radius: 10px;
-    background: #fdca00;
-    text-align: center;
-    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    max-width: 350px; /* Estetään kortteja venymästä liikaa */
-    margin: auto; /* Keskittää kortit tasaisesti */
-}
-
-.movie img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-
-.button {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    background: #070707;
-    color: #fdca00;
-    text-decoration: none;
-    border-radius: 5px;
-    width: 80%;
-}
-.movie .button {
-    margin-top: auto; /* Työntää painikkeen kortin alaosaan */
-}
+        @media (max-width: 768px) {
+            .movies-container {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            .movie {
+                max-width: 180px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -76,28 +79,28 @@ label {
         <h1>Finnkino Leffainfo</h1>
         <label>Elokuvateatteri</label>
         <select id="teatteri">
-            	<option value="1029">Valitse alue/teatteri</option>
-        	<option value="1014">Pääkaupunkiseutu</option>
-        	<option value="1012">Espoo</option>
-        	<option value="1039">Espoo: OMENA</option>
-        	<option value="1038">Espoo: SELLO</option>
-        	<option value="1002">Helsinki</option>
-        	<option value="1045">Helsinki: ITIS</option>
-        	<option value="1031">Helsinki: KINOPALATSI</option>
-        	<option value="1032">Helsinki: MAXIM</option>
-        	<option value="1033">Helsinki: TENNISPALATSI</option>
-        	<option value="1013">Vantaa: FLAMINGO</option>
-        	<option value="1015">Jyväskylä: Fantasia</option>
-        	<option value="1016">Kuopio: SCALA</option>
-        	<option value="1017">Lahti: KUVAPALATSI</option>
-	        <option value="1041">Lappeenranta: STRAND</option>
-        	<option value="1018">Oulu: PLAZA</option>
-        	<option value="1019">Pori: PROMENADI</option>
-        	<option value="1021">Tampere</option>
-        	<option value="1034">Tampere: CINE ATLAS</option>
-        	<option value="1035">Tampere: PLEVNA</option>
-        	<option value="1022">Turku: KINOPALATSI</option>
-	  </select>
+            <option value="1029">Valitse alue/teatteri</option>
+            <option value="1014">Pääkaupunkiseutu</option>
+            <option value="1012">Espoo</option>
+            <option value="1039">Espoo: OMENA</option>
+            <option value="1038">Espoo: SELLO</option>
+            <option value="1002">Helsinki</option>
+            <option value="1045">Helsinki: ITIS</option>
+            <option value="1031">Helsinki: KINOPALATSI</option>
+            <option value="1032">Helsinki: MAXIM</option>
+            <option value="1033">Helsinki: TENNISPALATSI</option>
+            <option value="1013">Vantaa: FLAMINGO</option>
+            <option value="1015">Jyväskylä: Fantasia</option>
+            <option value="1016">Kuopio: SCALA</option>
+            <option value="1017">Lahti: KUVAPALATSI</option>
+            <option value="1041">Lappeenranta: STRAND</option>
+            <option value="1018">Oulu: PLAZA</option>
+            <option value="1019">Pori: PROMENADI</option>
+            <option value="1021">Tampere</option>
+            <option value="1034">Tampere: CINE ATLAS</option>
+            <option value="1035">Tampere: PLEVNA</option>
+            <option value="1022">Turku: KINOPALATSI</option>
+        </select>
         <br><br>
         <label>Päivämäärä</label>
         <input type="date" id="pvm">
@@ -105,29 +108,29 @@ label {
         <button onclick="getMovies()">Hae elokuvat</button>
         <div id="elokuvat" class="movies-container"></div>
     </div>
-    
+
     <script>
         function getMovies() {
             let date = document.getElementById("pvm").value.split("-").reverse().join(".");
             let theater = document.getElementById("teatteri").value;
             let url = `https://www.finnkino.fi/xml/Schedule/?area=${theater}&dt=${date}`;
-            
+
             fetch(url)
                 .then(response => response.text())
                 .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
                 .then(data => {
                     let movies = data.getElementsByTagName("Show");
                     let output = "";
-                    
+
                     for (let i = 0; i < movies.length; i++) {
                         let title = movies[i].getElementsByTagName("Title")[0]?.textContent || "Nimetön";
                         let imageTag = movies[i].getElementsByTagName("EventLargeImagePortrait")[0];
-			let image = imageTag && imageTag.textContent.trim() ? imageTag.textContent.trim() : "https://via.placeholder.com/300x400?text=Ei+kuvaa";
+                        let image = imageTag && imageTag.textContent.trim() ? imageTag.textContent.trim() : "https://via.placeholder.com/300x400?text=Ei+kuvaa";
                         let theatre = movies[i].getElementsByTagName("TheatreAndAuditorium")[0]?.textContent || "Ei tietoa";
                         let start = movies[i].getElementsByTagName("dttmShowStart")[0]?.textContent.slice(11, 16) || "-";
                         let duration = movies[i].getElementsByTagName("LengthInMinutes")[0]?.textContent || "?";
                         let ticketURL = movies[i].getElementsByTagName("ShowURL")[0]?.textContent || "#";
-                        
+
                         output += `
                             <div class="movie">
                                 <img src="${image}" alt="Elokuvakuva">
@@ -142,7 +145,7 @@ label {
                 })
                 .catch(error => console.error("Virhe tietojen haussa:", error));
         }
-        
+
         document.addEventListener("DOMContentLoaded", () => {
             let today = new Date().toISOString().split("T")[0];
             document.getElementById("pvm").value = today;

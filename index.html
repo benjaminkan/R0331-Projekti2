@@ -160,7 +160,7 @@
       const params = new URLSearchParams(window.location.search);
       if (params.has("theater")) teatteriSelect.value = params.get("theater");
       if (params.has("date")) document.getElementById("pvm").value = params.get("date");
-      if (params.has("title")) elokuvalista.value = params.get("title");
+     // if (params.has("title")) elokuvalista.value = params.get("title");
       if (params.has("time")) document.getElementById("aikasuodatus").value = params.get("time");
       if (params.has("types")) {
         const types = params.get("types").split(",");
@@ -175,7 +175,7 @@
       const selectedTitle = elokuvalista.value;
       const selectedSalityypit = Array.from(document.querySelectorAll(".salityyppi:checked")).map(cb => cb.value);
       const params = new URLSearchParams(window.location.search);
-      const elokuvaParam = params.get("elokuva");
+      const elokuvaParam = params.get("title");
 
       
       updateURLParams({

@@ -5,21 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finnkino Leffainfo</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            margin: 0; 
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
             padding: 0;
             background-color: #070707;
-            overflow-x: hidden; /* Estää horisontaalisen vierityksen */
+            overflow-x: hidden;
         }
         h1, label {
             color: #fdca00;
         }
-        .container { 
+        .container {
             max-width: 100%;
             margin: auto;
             padding: 20px;
+        }
+        select, input[type="date"] {
+            padding: 5px;
+            margin: 5px;
         }
         .movies-container {
             display: grid;
@@ -62,7 +66,6 @@
         .movie .button {
             margin-top: auto;
         }
-
         @media (max-width: 768px) {
             .movies-container {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -102,8 +105,29 @@
             <option value="1022">Turku: KINOPALATSI</option>
         </select>
         <br><br>
+
         <label>Päivämäärä</label>
         <input type="date" id="pvm">
+
+        <br><br>
+
+        <label>Elokuvan nimi</label>
+        <select id="leffaNimi"><option value="">Kaikki</option></select>
+
+        <label>Ajankohta</label>
+        <select id="aikaSuodatin">
+            <option value="">Kaikki</option>
+            <option value="iltapaiva">Ennen klo 18</option>
+            <option value="ilta">Klo 18 jälkeen</option>
+        </select>
+
+        <label>Salityyppi</label>
+        <select id="saliTyyppi">
+            <option value="">Kaikki</option>
+            <option value="normaali">Normaali</option>
+            <option value="premium">Premium (iSense, LUXE, IMAX, MAXIM)</option>
+        </select>
+
         <br><br>
         <button onclick="getMovies()">Hae elokuvat</button>
         <div id="elokuvat" class="movies-container"></div>
@@ -122,26 +146,55 @@
                     let movies = data.getElementsByTagName("Show");
                     let output = "";
 
+                    // Täytä elokuvan nimi -valinta dynaamisesti
+                    let leffaNimiSelect = document.getElementById("leffaNimi");
+                    let nimet = new Set();
+                    for (let i = 0; i < movies.length; i++) {
+                        let title = movies[i].getElementsByTagName("Title")[0]?.textContent || "Nimetön";
+                        nimet.add(title);
+                    }
+                    leffaNimiSelect.innerHTML = '<option value="">Kaikki</option>';
+                    Array.from(nimet).sort().forEach(nimi => {
+                        leffaNimiSelect.innerHTML += `<option value="${nimi}">${nimi}</option>`;
+                    });
+
+                    // Filtterien arvot
+                    let valittuLeffa = document.getElementById("leffaNimi").value.toLowerCase();
+                    let valittuAika = document.getElementById("aikaSuodatin").value;
+                    let valittuSali = document.getElementById("saliTyyppi").value;
+
                     for (let i = 0; i < movies.length; i++) {
                         let title = movies[i].getElementsByTagName("Title")[0]?.textContent || "Nimetön";
                         let imageTag = movies[i].getElementsByTagName("EventLargeImagePortrait")[0];
                         let image = imageTag && imageTag.textContent.trim() ? imageTag.textContent.trim() : "https://via.placeholder.com/300x400?text=Ei+kuvaa";
-                        let theatre = movies[i].getElementsByTagName("TheatreAndAuditorium")[0]?.textContent || "Ei tietoa";
+                        let auditorium = movies[i].getElementsByTagName("TheatreAndAuditorium")[0]?.textContent || "Ei tietoa";
                         let start = movies[i].getElementsByTagName("dttmShowStart")[0]?.textContent.slice(11, 16) || "-";
                         let duration = movies[i].getElementsByTagName("LengthInMinutes")[0]?.textContent || "?";
                         let ticketURL = movies[i].getElementsByTagName("ShowURL")[0]?.textContent || "#";
+
+                        // Filtterit
+                        if (valittuLeffa && !title.toLowerCase().includes(valittuLeffa)) continue;
+
+                        let hour = parseInt(start.split(":")[0]);
+                        if (valittuAika === "iltapaiva" && hour >= 18) continue;
+                        if (valittuAika === "ilta" && hour < 18) continue;
+
+                        let audLower = auditorium.toLowerCase();
+                        const isPremium = ["isense", "luxe", "imax", "maxim"].some(p => audLower.includes(p));
+                        if (valittuSali === "premium" && !isPremium) continue;
+                        if (valittuSali === "normaali" && isPremium) continue;
 
                         output += `
                             <div class="movie">
                                 <img src="${image}" alt="Elokuvakuva">
                                 <h2>${title}</h2>
-                                <p><b>Teatteri:</b> ${theatre}</p>
+                                <p><b>Teatteri:</b> ${auditorium}</p>
                                 <p><b>Alkaa:</b> ${start} | <b>Kesto:</b> ${duration} min</p>
                                 <a href="${ticketURL}" target="_blank" class="button">Osta liput</a>
                             </div>
                         `;
                     }
-                    document.getElementById("elokuvat").innerHTML = `<div class="movies-container">${output}</div>`;
+                    document.getElementById("elokuvat").innerHTML = output || "<p style='color: white;'>Ei tuloksia valituilla suodattimilla.</p>";
                 })
                 .catch(error => console.error("Virhe tietojen haussa:", error));
         }

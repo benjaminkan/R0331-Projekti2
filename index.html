@@ -113,7 +113,7 @@
       <label><input type="checkbox" class="salityyppi" value="Normaali" checked> Normaalisalit</label>
     </div>
 
-    <button onclick="getMovies()">Hae elokuvat</button>
+    <!-- <button onclick="getMovies()">Hae elokuvat</button> -->
     <div id="elokuvat" class="movies-container"></div>
   </div>
 
@@ -242,6 +242,15 @@
       document.getElementById("pvm").value = today;
       loadParamsFromURL();
       getMovies();
+
+      // Suodattimet automaattiselle haulle
+  document.getElementById("teatteri").addEventListener("change", getMovies);
+  document.getElementById("pvm").addEventListener("change", getMovies);
+  document.getElementById("elokuvalista").addEventListener("change", getMovies);
+  document.getElementById("aikasuodatus").addEventListener("change", getMovies);
+  document.querySelectorAll(".salityyppi").forEach(cb =>
+    cb.addEventListener("change", getMovies)
+  );
     });
   </script>
 </body>

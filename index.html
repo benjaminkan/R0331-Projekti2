@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Finnkino Leffainfo</title>
   <style>
     body {
@@ -21,15 +21,12 @@
       margin: auto;
       padding: 20px;
     }
-    select, input[type="date"], .checkbox-group {
-      padding: 5px;
-      margin: 5px;
-    }
-    .checkbox-group {
+    .filter-group {
       display: flex;
-      justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
+      justify-content: center;
+      align-items: center;
     }
     .movies-container {
       display: grid;
@@ -72,6 +69,15 @@
     .movie .button {
       margin-top: auto;
     }
+    input, select {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .checkbox-group label {
+      color: #fdca00;
+      margin-right: 10px;
+    }
     @media (max-width: 768px) {
       .movies-container {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -86,143 +92,149 @@
 <body>
   <div class="container">
     <h1>Finnkino Leffainfo</h1>
-    <label>Elokuvateatteri</label>
-    <select id="teatteri" onchange="getMovies()">
-      <option value="1029">Valitse alue/teatteri</option>
-      <option value="1014">Pääkaupunkiseutu</option>
-      <option value="1012">Espoo</option>
-      <option value="1039">Espoo: OMENA</option>
-      <option value="1038">Espoo: SELLO</option>
-      <option value="1002">Helsinki</option>
-      <option value="1045">Helsinki: ITIS</option>
-      <option value="1031">Helsinki: KINOPALATSI</option>
-      <option value="1032">Helsinki: MAXIM</option>
-      <option value="1033">Helsinki: TENNISPALATSI</option>
-      <option value="1013">Vantaa: FLAMINGO</option>
-      <option value="1015">Jyväskylä: Fantasia</option>
-      <option value="1016">Kuopio: SCALA</option>
-      <option value="1017">Lahti: KUVAPALATSI</option>
-      <option value="1041">Lappeenranta: STRAND</option>
-      <option value="1018">Oulu: PLAZA</option>
-      <option value="1019">Pori: PROMENADI</option>
-      <option value="1021">Tampere</option>
-      <option value="1034">Tampere: CINE ATLAS</option>
-      <option value="1035">Tampere: PLEVNA</option>
-      <option value="1022">Turku: KINOPALATSI</option>
-    </select>
-
-    <br><br>
-
-    <label>Päivämäärä</label>
-    <input type="date" id="pvm" onchange="getMovies()"/>
-
-    <br><br>
-
-    <label>Elokuvan nimi</label>
-    <select id="leffaNimi" onchange="filterMovies()"><option value="">Kaikki</option></select>
-
-    <label>Ajankohta</label>
-    <select id="aikaSuodatin" onchange="filterMovies()">
-      <option value="">Kaikki</option>
-      <option value="iltapaiva">Ennen klo 18</option>
-      <option value="ilta">Klo 18 jälkeen</option>
-    </select>
-
-    <br><br>
-
-    <label>Salityyppi</label>
-    <div class="checkbox-group" id="saliCheckboxGroup">
-      <label><input type="checkbox" value="normaali" onchange="filterMovies()"> Normaali</label>
-      <label><input type="checkbox" value="isense" onchange="filterMovies()"> iSense</label>
-      <label><input type="checkbox" value="luxe" onchange="filterMovies()"> LUXE</label>
-      <label><input type="checkbox" value="imax" onchange="filterMovies()"> IMAX</label>
-      <label><input type="checkbox" value="maxim" onchange="filterMovies()"> MAXIM</label>
+    <div class="filter-group">
+      <label>Elokuvateatteri</label>
+      <select id="teatteri">
+        <option value="1029">Valitse alue/teatteri</option>
+        <option value="1014">Pääkaupunkiseutu</option>
+        <option value="1012">Espoo</option>
+        <option value="1039">Espoo: OMENA</option>
+        <option value="1038">Espoo: SELLO</option>
+        <option value="1002">Helsinki</option>
+        <option value="1045">Helsinki: ITIS</option>
+        <option value="1031">Helsinki: KINOPALATSI</option>
+        <option value="1032">Helsinki: MAXIM</option>
+        <option value="1033">Helsinki: TENNISPALATSI</option>
+        <option value="1013">Vantaa: FLAMINGO</option>
+        <option value="1015">Jyväskylä: Fantasia</option>
+        <option value="1016">Kuopio: SCALA</option>
+        <option value="1017">Lahti: KUVAPALATSI</option>
+        <option value="1041">Lappeenranta: STRAND</option>
+        <option value="1018">Oulu: PLAZA</option>
+        <option value="1019">Pori: PROMENADI</option>
+        <option value="1021">Tampere</option>
+        <option value="1034">Tampere: CINE ATLAS</option>
+        <option value="1035">Tampere: PLEVNA</option>
+        <option value="1022">Turku: KINOPALATSI</option>
+      </select>
+      <label>Päivämäärä</label>
+      <input type="date" id="pvm">
     </div>
 
+    <br>
+    <div class="filter-group">
+      <label for="titleFilter">Elokuvan nimi</label>
+      <input type="text" id="titleFilter" placeholder="Hae nimellä">
+
+      <label for="timeFilter">Alkamisaika vähintään (hh:mm)</label>
+      <input type="time" id="timeFilter">
+
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="salityyppi" value="imax"> IMAX</label>
+        <label><input type="checkbox" name="salityyppi" value="luxe"> LUXE</label>
+        <label><input type="checkbox" name="salityyppi" value="isense"> iSense</label>
+        <label><input type="checkbox" name="salityyppi" value="maxim"> Maxim</label>
+      </div>
+    </div>
+
+    <br>
+    <button onclick="getMovies()">Hae elokuvat</button>
     <div id="elokuvat" class="movies-container"></div>
   </div>
 
   <script>
-    let allMoviesData = [];
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function updateURLParams(params) {
+      const url = new URL(window.location);
+      for (const key in params) {
+        if (params[key]) {
+          url.searchParams.set(key, params[key]);
+        } else {
+          url.searchParams.delete(key);
+        }
+      }
+      history.replaceState(null, '', url);
+    }
 
     function getMovies() {
-      let date = document.getElementById("pvm").value.split("-").reverse().join(".");
+      let date = document.getElementById("pvm").value;
+      let formattedDate = date.split("-").reverse().join(".");
       let theater = document.getElementById("teatteri").value;
-      if (!theater || !date) return;
+      let url = `https://www.finnkino.fi/xml/Schedule/?area=${theater}&dt=${formattedDate}`;
 
-      let url = `https://www.finnkino.fi/xml/Schedule/?area=${theater}&dt=${date}`;
+      // Tallenna suodattimet URL-parametreihin
+      const titleFilter = document.getElementById("titleFilter").value;
+      const timeFilter = document.getElementById("timeFilter").value;
+      const salityypit = Array.from(document.querySelectorAll('input[name="salityyppi"]:checked')).map(cb => cb.value);
+      updateURLParams({
+        theatre: theater,
+        date: date,
+        title: titleFilter,
+        time: timeFilter,
+        sali: salityypit.join(',')
+      });
 
       fetch(url)
         .then(response => response.text())
         .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
         .then(data => {
-          let shows = Array.from(data.getElementsByTagName("Show"));
-          allMoviesData = shows.map(show => ({
-            title: show.getElementsByTagName("Title")[0]?.textContent || "Nimetön",
-            image: show.getElementsByTagName("EventLargeImagePortrait")[0]?.textContent.trim() || "https://via.placeholder.com/300x400?text=Ei+kuvaa",
-            theatre: show.getElementsByTagName("TheatreAndAuditorium")[0]?.textContent || "Ei tietoa",
-            start: show.getElementsByTagName("dttmShowStart")[0]?.textContent.slice(11, 16) || "-",
-            duration: show.getElementsByTagName("LengthInMinutes")[0]?.textContent || "?",
-            url: show.getElementsByTagName("ShowURL")[0]?.textContent || "#"
-          }));
+          let movies = data.getElementsByTagName("Show");
+          let output = "";
 
-          // Täytä elokuvien nimivalikko
-          const nameSelect = document.getElementById("leffaNimi");
-          const names = [...new Set(allMoviesData.map(m => m.title))].sort();
-          nameSelect.innerHTML = '<option value="">Kaikki</option>';
-          names.forEach(name => {
-            nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
-          });
+          for (let i = 0; i < movies.length; i++) {
+            let title = movies[i].getElementsByTagName("Title")[0]?.textContent || "Nimetön";
+            let image = movies[i].getElementsByTagName("EventLargeImagePortrait")[0]?.textContent.trim() || "https://via.placeholder.com/300x400?text=Ei+kuvaa";
+            let theatre = movies[i].getElementsByTagName("TheatreAndAuditorium")[0]?.textContent || "Ei tietoa";
+            let startTime = movies[i].getElementsByTagName("dttmShowStart")[0]?.textContent || "";
+            let time = startTime.slice(11, 16);
+            let duration = movies[i].getElementsByTagName("LengthInMinutes")[0]?.textContent || "?";
+            let ticketURL = movies[i].getElementsByTagName("ShowURL")[0]?.textContent || "#";
 
-          filterMovies();
+            let selectedTime = document.getElementById("timeFilter").value;
+            if (selectedTime && time < selectedTime) continue;
+
+            let filterText = document.getElementById("titleFilter").value.toLowerCase();
+            if (filterText && !title.toLowerCase().includes(filterText)) continue;
+
+            let selectedSalityypit = Array.from(document.querySelectorAll('input[name="salityyppi"]:checked')).map(cb => cb.value);
+            let theatreLower = theatre.toLowerCase();
+            if (selectedSalityypit.length > 0 && !selectedSalityypit.some(type => theatreLower.includes(type))) continue;
+
+            output += `
+              <div class="movie">
+                <img src="${image}" alt="Elokuvakuva">
+                <h2>${title}</h2>
+                <p><b>Teatteri:</b> ${theatre}</p>
+                <p><b>Alkaa:</b> ${time} | <b>Kesto:</b> ${duration} min</p>
+                <a href="${ticketURL}" target="_blank" class="button">Osta liput</a>
+              </div>
+            `;
+          }
+          document.getElementById("elokuvat").innerHTML = `<div class="movies-container">${output}</div>`;
         })
         .catch(error => console.error("Virhe tietojen haussa:", error));
     }
 
-    function filterMovies() {
-      const nameFilter = document.getElementById("leffaNimi").value;
-      const timeFilter = document.getElementById("aikaSuodatin").value;
-      const saliFilters = Array.from(document.querySelectorAll("#saliCheckboxGroup input:checked")).map(cb => cb.value);
-
-      let output = "";
-
-      allMoviesData.forEach(movie => {
-        // Nimi
-        if (nameFilter && movie.title !== nameFilter) return;
-
-        // Aika
-        const hour = parseInt(movie.start.split(":")[0]);
-        if (timeFilter === "iltapaiva" && hour >= 18) return;
-        if (timeFilter === "ilta" && hour < 18) return;
-
-        // Sali
-        const salinimi = movie.theatre.toLowerCase();
-        let isMatch = saliFilters.length === 0 || saliFilters.some(filt => {
-          if (filt === "normaali") {
-            return !["isense", "imax", "luxe", "maxim"].some(p => salinimi.includes(p));
-          }
-          return salinimi.includes(filt);
-        });
-
-        if (!isMatch) return;
-
-        output += `
-          <div class="movie">
-            <img src="${movie.image}" alt="Elokuvakuva">
-            <h2>${movie.title}</h2>
-            <p><b>Teatteri:</b> ${movie.theatre}</p>
-            <p><b>Alkaa:</b> ${movie.start} | <b>Kesto:</b> ${movie.duration} min</p>
-            <a href="${movie.url}" target="_blank" class="button">Osta liput</a>
-          </div>
-        `;
-      });
-
-      document.getElementById("elokuvat").innerHTML = output || "<p style='color:white'>Ei tuloksia valituilla suodattimilla.</p>";
-    }
-
     document.addEventListener("DOMContentLoaded", () => {
       const today = new Date().toISOString().split("T")[0];
-      document.getElementById("pvm").value = today;
+      document.getElementById("pvm").value = getQueryParam("date") || today;
+      document.getElementById("teatteri").value = getQueryParam("theatre") || "1029";
+      document.getElementById("titleFilter").value = getQueryParam("title") || "";
+      document.getElementById("timeFilter").value = getQueryParam("time") || "";
+
+      const saliParam = getQueryParam("sali");
+      if (saliParam) {
+        const salityypit = saliParam.split(',');
+        salityypit.forEach(val => {
+          const cb = document.querySelector(`input[name='salityyppi'][value='${val}']`);
+          if (cb) cb.checked = true;
+        });
+      }
+      getMovies();
     });
   </script>
 </body>

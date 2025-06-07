@@ -224,13 +224,31 @@
               </div>`;
           }
 
+          // elokuvalista.innerHTML = "<option value=''>Kaikki elokuvat</option>";
+          //Array.from(titlesSet).sort().forEach(t => {
+          //  const opt = document.createElement("option");
+          //  opt.value = t;
+          //  opt.textContent = t;
+          //  elokuvalista.appendChild(opt);
+          //}); 
+
+          // Tallenna nykyinen valinta
+          const currentSelection = elokuvalista.value;
+
           elokuvalista.innerHTML = "<option value=''>Kaikki elokuvat</option>";
-          Array.from(titlesSet).sort().forEach(t => {
-            const opt = document.createElement("option");
-            opt.value = t;
-            opt.textContent = t;
-            elokuvalista.appendChild(opt);
+          const sortedTitles = Array.from(titlesSet).sort();
+          sortedTitles.forEach(t => {
+              const opt = document.createElement("option");
+              opt.value = t;
+              opt.textContent = t;
+              elokuvalista.appendChild(opt);
           });
+
+          // Palauta valinta, jos se on edelleen listassa
+          if (sortedTitles.includes(currentSelection)) {
+              elokuvalista.value = currentSelection;
+          }
+
 
           document.getElementById("elokuvat").innerHTML = output || "<p style='color:#fdca00'>Ei näytöksiä annetuilla suodattimilla.</p>";
         })

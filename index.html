@@ -174,7 +174,10 @@
       const timeLimit = document.getElementById("aikasuodatus").value;
       const selectedTitle = elokuvalista.value;
       const selectedSalityypit = Array.from(document.querySelectorAll(".salityyppi:checked")).map(cb => cb.value);
+      const params = new URLSearchParams(window.location.search);
+      const elokuvaParam = params.get("elokuva");
 
+      
       updateURLParams({
         theater,
         date,
@@ -236,18 +239,21 @@
           const currentSelection = elokuvalista.value;
 
           elokuvalista.innerHTML = "<option value=''>Kaikki elokuvat</option>";
-          const sortedTitles = Array.from(titlesSet).sort();
-          sortedTitles.forEach(t => {
-              const opt = document.createElement("option");
-              opt.value = t;
-              opt.textContent = t;
-              elokuvalista.appendChild(opt);
-          });
+const sortedTitles = Array.from(titlesSet).sort();
+sortedTitles.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    elokuvalista.appendChild(opt);
+});
 
-          // Palauta valinta, jos se on edelleen listassa
-          if (sortedTitles.includes(currentSelection)) {
-              elokuvalista.value = currentSelection;
-          }
+// Palauta joko käyttäjän nykyinen valinta tai URL-parametriin perustuva
+if (sortedTitles.includes(selectedTitle)) {
+    elokuvalista.value = selectedTitle;
+} else if (elokuvaParam && sortedTitles.includes(elokuvaParam)) {
+    elokuvalista.value = elokuvaParam;
+}
+
 
 
           document.getElementById("elokuvat").innerHTML = output || "<p style='color:#fdca00'>Ei näytöksiä annetuilla suodattimilla.</p>";
